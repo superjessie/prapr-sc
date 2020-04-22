@@ -37,6 +37,7 @@ import org.pitest.mutationtest.config.ReportOptions;
 import org.pitest.mutationtest.tooling.CombinedStatistics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -133,8 +134,14 @@ public class PraPRMojo extends AbstractPitMojo {
             log.info("PraPR verbose report is activated.");
         }
         final ReportOptions pitReportOptions;
+
+        String OutPutDirectory = this.getProject().getBuild().getOutputDirectory();
+
+
         pitReportOptions = new MojoToReportOptionsConverter(this, new SurefireConfigConverter(), this.filter)
                 .convert();
+        pitReportOptions.setCodePaths(Collections.singleton(this.getProject().getBuild().getTestOutputDirectory()));
+
         final PraPRReportOptions data = new PraPRReportOptions(pitReportOptions);
         data.setMutationEngine("prapr");
         data.setMutateSuspStmt(SuspCheckerType.valueOf(this.mutateSuspStmt));
